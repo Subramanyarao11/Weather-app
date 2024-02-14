@@ -87,3 +87,7 @@ body[style] {
     @apply bg-background text-foreground;
   }
 }
+
+canvas {
+  outline: none;
+}

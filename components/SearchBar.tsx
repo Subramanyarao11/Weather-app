@@ -36,7 +36,7 @@ export function SearchBar() {
       const [geocodingData] = await geocodingResponse.json();
       const latitude = geocodingData.lat;
       const longitude = geocodingData.lon;
-      router.push(`/search?lat=${latitude}&lon=${longitude}`);
+      router.push(`/search?lat=${latitude}&lon=${longitude}&city=${cityName}`);
     } catch (error) {
       console.error(error);
       toast({
