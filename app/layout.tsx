@@ -4,6 +4,7 @@ import './globals.css';
 import AuthContextProvider from '@/lib/store/auth-context';
 import { ThemeProvider } from '@/components/theme-provider';
 import NavBar from '@/components/Navbar';
+import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
             </div>
           </AuthContextProvider>
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );
