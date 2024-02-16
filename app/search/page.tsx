@@ -1,5 +1,6 @@
 import { getAirPolData } from '@/actions/getAirPolData';
 import { getData } from '@/actions/getData';
+import TempSwitch from '@/components/TempSwitch';
 import Weather from '@/components/Weather';
 import WeatherWidgets from '@/components/WeatherWidget';
 import { Metadata } from 'next';
@@ -36,13 +37,18 @@ export default async function SearchPage({ searchParams }: { searchParams: searc
   if (!data || !air_pollution) return notFound();
 
   return (
-    <div className="flex flex-col gap-4 md:flex-row">
-      <div className="flex w-full min-w-[18rem] flex-col gap-4 md:w-1/2">
-        <Weather data={data} />
+    <>
+      <div className="flex center justify-center my-4">
+        <TempSwitch />
       </div>
-      <section className="grid h-full grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
-        <WeatherWidgets data={data} airQuality={air_pollution.list[0]} />
-      </section>
-    </div>
+      <div className="flex flex-col gap-4 md:flex-row">
+        <div className="flex w-full min-w-[18rem] flex-col gap-4 md:w-1/2">
+          <Weather data={data} />
+        </div>
+        <section className="grid h-full grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+          <WeatherWidgets data={data} airQuality={air_pollution.list[0]} />
+        </section>
+      </div>
+    </>
   );
 }

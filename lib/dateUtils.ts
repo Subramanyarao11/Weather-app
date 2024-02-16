@@ -35,3 +35,5 @@ export function kelvinToFahrenheit(kelvin: number): number {
 
   return (kelvin - 273.15) * (9 / 5) + 32;
 }
+
+export const formatTemperature = (temperature: any, unit: any) => `${Math.round(temperature)}°${unit}`;

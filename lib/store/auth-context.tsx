@@ -21,7 +21,6 @@ export default function AuthContextProvider({ children }: { children: React.Reac
   const googleLoginHandler = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      console.log(result.user);
     } catch (error) {
       throw error;
     }

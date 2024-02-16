@@ -5,6 +5,7 @@ import AuthContextProvider from '@/lib/store/auth-context';
 import { ThemeProvider } from '@/components/theme-provider';
 import NavBar from '@/components/Navbar';
 import { Toaster } from '@/components/ui/toaster';
+import { TemperatureProvider } from '@/lib/store/temp-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,10 +27,12 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthContextProvider>
-            <div className="flex flex-col min-h-screen">
-              <NavBar />
-              <div className="flex-grow">{children}</div>
-            </div>
+            <TemperatureProvider>
+              <div className="flex flex-col min-h-screen">
+                <NavBar />
+                <div className="flex-grow">{children}</div>
+              </div>
+            </TemperatureProvider>
           </AuthContextProvider>
         </ThemeProvider>
         <Toaster />

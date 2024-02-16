@@ -1,13 +1,18 @@
+'use client';
 import { Card } from '@/components/ui/card';
 import Clock from '../components/ui/clock';
-import { convertToDate, kelvinToCelsius } from '@/lib/dateUtils';
+import { convertToDate, formatTemperature, kelvinToCelsius, kelvinToFahrenheit } from '../lib/dateUtils';
 import IconComponent from '../components/ui/icon-component';
+import { useTemperature } from '../lib/store/temp-context';
 
 interface CurrentWeatherProps {
   data: any;
 }
 
 export default function Weather({ data }: CurrentWeatherProps) {
+  const { unit, toggleUnit } = useTemperature();
+  const temp = data.main.temp;
+  const temperature = unit === 'C' ? kelvinToCelsius(temp) : kelvinToFahrenheit(temp);
   const initial = new Date();
 
   return (
@@ -42,9 +47,7 @@ export default function Weather({ data }: CurrentWeatherProps) {
           </i>
         </div>
       </div>
-      <div className="flex justify-center py-7 text-8xl font-bold md:py-10">
-        {Math.round(kelvinToCelsius(data.main.temp))}&deg;
-      </div>
+      <div className="flex justify-center py-7 text-8xl font-bold md:py-10">{formatTemperature(temperature, unit)}</div>
       <div>
         <IconComponent weatherCode={data.weather[0].id} className="h-9 w-9" />
         <div className="font-semibold">{data.weather[0].main}</div>
