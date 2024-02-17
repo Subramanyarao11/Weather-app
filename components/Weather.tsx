@@ -4,13 +4,43 @@ import Clock from '../components/ui/clock';
 import { convertToDate, formatTemperature, kelvinToCelsius, kelvinToFahrenheit } from '../lib/dateUtils';
 import IconComponent from '../components/ui/icon-component';
 import { useTemperature } from '../lib/store/temp-context';
+import { Button } from './ui/button';
+import { Heart } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { addDoc, collection } from 'firebase/firestore';
+import { useContext } from 'react';
+import { authContext } from '@/lib/store/auth-context';
+import { toast } from './ui/use-toast';
+const favouritesRef = collection(db, 'favourites');
 
 interface CurrentWeatherProps {
   data: any;
+  lat: string;
+  lon: string;
 }
 
-export default function Weather({ data }: CurrentWeatherProps) {
+export default function Weather({ data, lat, lon }: CurrentWeatherProps) {
   const { unit } = useTemperature();
+  const { user } = useContext(authContext);
+
+  const handleSave = async () => {
+    try {
+      await addDoc(favouritesRef, {
+        userId: user?.uid,
+        locations: { latitude: lat, longitude: lon },
+      });
+      toast({
+        title: 'Added to favourites',
+        description: 'You can view your favourite locations in the dashboard',
+      });
+    } catch (error) {
+      console.error('Error adding document: ', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to add location to favourites',
+      });
+    }
+  };
   const temp = data.main.temp;
   const temperature = unit === 'C' ? kelvinToCelsius(temp) : kelvinToFahrenheit(temp);
   const initial = new Date();
@@ -48,13 +78,25 @@ export default function Weather({ data }: CurrentWeatherProps) {
         </div>
       </div>
       <div className="flex justify-center py-7 text-8xl font-bold md:py-10">{formatTemperature(temperature, unit)}</div>
-      <div>
-        <IconComponent weatherCode={data.weather[0].id} className="h-9 w-9" />
-        <div className="font-semibold">{data.weather[0].main}</div>
-        <div className="flex gap-2 dark:text-neutral-500">
-          <span>H: {Math.round(kelvinToCelsius(data.main.temp_max))}&deg;</span>
-          <span>L: {Math.round(kelvinToCelsius(data.main.temp_min))}&deg;</span>
+      <div className="flex justify-between items-center p-2">
+        <div>
+          <IconComponent weatherCode={data.weather[0].id} className="h-9 w-9" />
+          <div className="font-semibold">{data.weather[0].main}</div>
+          <div className="flex gap-2 dark:text-neutral-500">
+            <span>H: {Math.round(kelvinToCelsius(data.main.temp_max))}&deg;</span>
+            <span>L: {Math.round(kelvinToCelsius(data.main.temp_min))}&deg;</span>
+          </div>
         </div>
+        {user && (
+          <div>
+            <Button onClick={handleSave}>
+              <span className="text-sm md:hidden">
+                <Heart />
+              </span>
+              <span className="hidden md:inline-block">Add to favourites</span>
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );

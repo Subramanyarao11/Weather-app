@@ -1,0 +1,14 @@
+useEffect(() => {
+  const fetchFavorites = async () => {
+    const favoritesRef = firestore.collection('favourites').doc(auth.currentUser.uid);
+    const doc = await favoritesRef.get();
+
+    if (doc.exists) {
+      const locations = doc.data().locations;
+      // For each location, fetch weather data from OpenWeather API
+      // and update state to render in the UI
+    }
+  };
+
+  fetchFavorites();
+}, []);
