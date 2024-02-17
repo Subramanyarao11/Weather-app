@@ -10,7 +10,7 @@ interface CurrentWeatherProps {
 }
 
 export default function Weather({ data }: CurrentWeatherProps) {
-  const { unit, toggleUnit } = useTemperature();
+  const { unit } = useTemperature();
   const temp = data.main.temp;
   const temperature = unit === 'C' ? kelvinToCelsius(temp) : kelvinToFahrenheit(temp);
   const initial = new Date();

@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import NavBar from '@/components/Navbar';
 import { Toaster } from '@/components/ui/toaster';
 import { TemperatureProvider } from '@/lib/store/temp-context';
+import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,7 +30,9 @@ export default function RootLayout({
           <AuthContextProvider>
             <TemperatureProvider>
               <div className="flex flex-col min-h-screen">
-                <NavBar />
+                <Suspense fallback={<div className="text-center">Loading...</div>}>
+                  <NavBar />
+                </Suspense>
                 <div className="flex-grow">{children}</div>
               </div>
             </TemperatureProvider>

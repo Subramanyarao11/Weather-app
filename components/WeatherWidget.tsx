@@ -1,8 +1,10 @@
+'use client';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
-import { Progress } from '../components/ui/progress';
+import { convertToDate, formatTemperature, kelvinToCelsius, kelvinToFahrenheit } from '../lib/dateUtils';
 import AirPollution from './AirPollution';
 import Compass from '../components/ui/compass';
 import { formatSunTimeWithAMPM } from '@/lib/dateUtils';
+import { useTemperature } from '../lib/store/temp-context';
 
 interface WeatherWidgetsProps {
   data: any;
@@ -10,6 +12,12 @@ interface WeatherWidgetsProps {
 }
 
 export default function WeatherWidgets({ data, airQuality }: WeatherWidgetsProps) {
+  const { unit } = useTemperature();
+  const feels_like = data.main.feels_like;
+  //   console.log(data.main.feels_like);
+  const feels_like_temp = unit === 'C' ? kelvinToCelsius(feels_like) : kelvinToFahrenheit(feels_like);
+  //   console.log(feels_like_temp);
+
   return (
     <>
       <AirPollution airQuality={airQuality} className="order-2 md:order-1" />
@@ -122,7 +130,7 @@ export default function WeatherWidgets({ data, airQuality }: WeatherWidgetsProps
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p>{Math.floor(data.main.feels_like)}&deg;</p>
+          <p>{formatTemperature(feels_like_temp, unit)}</p>
         </CardContent>
         <CardFooter>
           <p>
@@ -195,7 +203,7 @@ export default function WeatherWidgets({ data, airQuality }: WeatherWidgetsProps
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p>74&deg;</p>
+          <p>{data.main.humidity}%</p>
         </CardContent>
         <CardFooter>
           <p>
