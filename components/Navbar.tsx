@@ -1,15 +1,28 @@
 'use client';
-import { BarChart4 } from 'lucide-react';
+import { BarChart4, Loader } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from './ModeToggle';
 import { authContext } from '@/lib/store/auth-context';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 function NavBar() {
   const { user, logout, loading, googleLoginHandler } = useContext(authContext);
   const router = useRouter();
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted)
+    return (
+      <div className="w-full h-full flex items-center justify-center py-6">
+        <Loader />
+      </div>
+    );
+
   const handleLogin = async () => {
     await googleLoginHandler();
     router.refresh();
@@ -32,11 +45,11 @@ function NavBar() {
                     </Avatar>
                   </div>
                   {/* User greeting */}
-                  <small>Hi {user.displayName}!</small>
+                  <p className="text-xs md:text-base lg:text-lg xl:text-xl">Hi {user.displayName}!</p>
                 </>
               ) : (
                 // Welcome message when not logged in
-                <small>Welcome</small>
+                <p className="text-xs md:text-base lg:text-lg xl:text-xl">Welcome Anon</p>
               )}
             </div>
 

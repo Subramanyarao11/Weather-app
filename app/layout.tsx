@@ -7,6 +7,11 @@ import NavBar from '@/components/Navbar';
 import { Toaster } from '@/components/ui/toaster';
 import { TemperatureProvider } from '@/lib/store/temp-context';
 import { Suspense } from 'react';
+import TempSwitch from '@/components/TempSwitch';
+import { headers } from 'next/headers';
+import { extractPath } from '@/lib/utils';
+
+export const dynamic = 'force-dynamic';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,9 +25,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = headers();
+  const header_url = headersList.get('x-url') || '';
+  const path = extractPath(header_url);
   return (
     <html lang="en" suppressHydrationWarning>
-      {/* flex flex-col */}
       <body
         className={`${inter.className} container mx-auto flex min-h-screen flex-col px-[1rem] antialiased selection:bg-black selection:text-white dark:bg-black dark:selection:bg-white dark:selection:text-black md:px-[2rem]`}
       >
@@ -30,9 +37,12 @@ export default function RootLayout({
           <AuthContextProvider>
             <TemperatureProvider>
               <div className="flex flex-col min-h-screen">
-                <Suspense fallback={<div className="text-center">Loading...</div>}>
-                  <NavBar />
-                </Suspense>
+                <NavBar />
+                {path !== '/' && (
+                  <div className="flex center justify-center my-4">
+                    <TempSwitch />
+                  </div>
+                )}
                 <div className="flex-grow">{children}</div>
               </div>
             </TemperatureProvider>

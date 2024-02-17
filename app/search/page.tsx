@@ -5,6 +5,7 @@ import Weather from '@/components/Weather';
 import WeatherWidgets from '@/components/WeatherWidget';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import MyButton from '@/components/MyButton';
 
 interface searchParamsProps {
   lat: string;
@@ -14,7 +15,6 @@ interface searchParamsProps {
 
 export async function generateMetadata({ searchParams }: { searchParams: searchParamsProps }): Promise<Metadata> {
   const { city } = searchParams;
-
   return {
     title: `${city} - Weather Forecast`,
     description: `${city} weather forecast with current conditions, wind, air quality, among other details.`,
@@ -27,7 +27,7 @@ interface searchParamsProps {
 }
 export default async function SearchPage({ searchParams }: { searchParams: searchParamsProps }) {
   const { lat, lon } = searchParams;
-
+  const { city } = searchParams;
   const dataRequest = await getData({ lat, lon });
 
   const airDataRequest = await getAirPolData({ lat, lon });
@@ -38,9 +38,6 @@ export default async function SearchPage({ searchParams }: { searchParams: searc
 
   return (
     <>
-      <div className="flex center justify-center my-4">
-        <TempSwitch />
-      </div>
       <div className="flex flex-col gap-4 md:flex-row">
         <div className="flex w-full min-w-[18rem] flex-col gap-4 md:w-1/2">
           <Weather data={data} />
@@ -48,6 +45,9 @@ export default async function SearchPage({ searchParams }: { searchParams: searc
         <section className="grid h-full grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
           <WeatherWidgets data={data} airQuality={air_pollution.list[0]} />
         </section>
+      </div>
+      <div className="flex center justify-center my-4">
+        <MyButton path={`/details?lat=${lat}&lon=${lon}&city=${city}`} />
       </div>
     </>
   );

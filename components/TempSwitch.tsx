@@ -5,11 +5,8 @@ import { kelvinToCelsius, kelvinToFahrenheit, formatTemperature } from '../lib/d
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 
-function TempSwitch({ kelvin = 284.18 }) {
+function TempSwitch() {
   const { unit, toggleUnit } = useTemperature();
-
-  // Convert temperature based on the current unit
-  const temperature = unit === 'C' ? kelvinToCelsius(kelvin) : kelvinToFahrenheit(kelvin);
 
   // Determine the checked state for the switch
   const [isChecked, setIsChecked] = useState(unit === 'F');
@@ -31,7 +28,6 @@ function TempSwitch({ kelvin = 284.18 }) {
       <Label className="text-lg font-semibold" htmlFor="temperature-toggle">
         Switch to {unit === 'C' ? 'Fahrenheit' : 'Celsius'}
       </Label>
-      {/* <span>{formatTemperature(temperature, unit)}</span> */}
     </div>
   );
 }

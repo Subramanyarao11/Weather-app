@@ -37,3 +37,14 @@ export function kelvinToFahrenheit(kelvin: number): number {
 }
 
 export const formatTemperature = (temperature: any, unit: any) => `${Math.round(temperature)}°${unit}`;
+
+export function formatTimeFromString(dateTimeString: string): string {
+  const date = new Date(dateTimeString);
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+  return `${hours}:${formattedMinutes} ${ampm}`;
+}
